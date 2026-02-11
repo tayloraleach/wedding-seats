@@ -1,0 +1,20 @@
+.floor-plan {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.floor-plan__canvas {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.floor-plan__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 15px;
+}

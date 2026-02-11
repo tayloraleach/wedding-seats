@@ -1,0 +1,29 @@
+.guest-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: grab;
+  user-select: none;
+  white-space: nowrap;
+  touch-action: none;
+}
+
+.guest-chip:hover {
+  background: var(--chip-bg-hover);
+}
+
+.guest-chip--dragging {
+  opacity: 0.3;
+}
+
+.guest-chip--overlay {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+  cursor: grabbing;
+}
