@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -21,6 +21,14 @@ import './App.css';
 function App() {
   const [state, dispatch] = usePersistedState();
   const [activeGuest, setActiveGuest] = useState<Guest | null>(null);
+  const [showInfo, setShowInfo] = useState(false);
+  const infoTimeout = useRef<ReturnType<typeof setTimeout>>();
+
+  const handleReset = () => {
+    if (window.confirm('This will remove all guests, tables, and seating assignments. Continue?')) {
+      dispatch({ type: 'RESET' });
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -89,6 +97,28 @@ function App() {
       <div className="app">
         <header className="app__header">
           <h1>Wedding Seating Chart</h1>
+          <div className="app__header-actions">
+            <div
+              className="app__info-wrapper"
+              onMouseEnter={() => {
+                clearTimeout(infoTimeout.current);
+                setShowInfo(true);
+              }}
+              onMouseLeave={() => {
+                infoTimeout.current = setTimeout(() => setShowInfo(false), 150);
+              }}
+            >
+              <button className="app__info-btn" aria-label="Storage info">?</button>
+              {showInfo && (
+                <div className="app__info-tooltip">
+                  Your data is saved automatically to this browser's local storage. Nothing is sent to a server.
+                </div>
+              )}
+            </div>
+            <button className="app__reset-btn" onClick={handleReset}>
+              Reset
+            </button>
+          </div>
         </header>
         <div className="app__body">
           <ControlPanel />

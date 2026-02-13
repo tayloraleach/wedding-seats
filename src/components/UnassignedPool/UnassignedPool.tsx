@@ -11,7 +11,9 @@ export function UnassignedPool() {
   });
 
   const assignedGuestIds = new Set(Object.values(state.seatAssignments));
-  const unassignedGuests = state.guests.filter((g) => !assignedGuestIds.has(g.id));
+  const unassignedGuests = state.guests
+    .filter((g) => !assignedGuestIds.has(g.id))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div

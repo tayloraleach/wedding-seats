@@ -39,41 +39,75 @@ export function TableConfigurator() {
               </button>
             </div>
             <div className="table-config__controls">
-              <label className="table-config__control">
-                <span>Shape</span>
-                <select
-                  value={table.shape}
-                  onChange={(e) =>
-                    dispatch({
-                      type: 'UPDATE_TABLE',
-                      tableId: table.id,
-                      changes: { shape: e.target.value as TableShape },
-                    })
-                  }
-                  className="table-config__select"
-                >
-                  <option value="round">Round</option>
-                  <option value="rectangle">Rectangle</option>
-                </select>
-              </label>
-              {table.shape === 'rectangle' && (
-                <label className="table-config__control">
-                  <span>Orientation</span>
-                  <select
-                    value={table.orientation ?? 'vertical'}
-                    onChange={(e) =>
+              <div className="table-config__control">
+                <div className="table-config__toggle-group">
+                  <button
+                    className={`table-config__toggle-btn${table.shape === 'round' ? ' table-config__toggle-btn--active' : ''}`}
+                    title="Round"
+                    onClick={() =>
                       dispatch({
                         type: 'UPDATE_TABLE',
                         tableId: table.id,
-                        changes: { orientation: e.target.value as TableOrientation },
+                        changes: { shape: 'round' as TableShape },
                       })
                     }
-                    className="table-config__select"
                   >
-                    <option value="vertical">Vertical</option>
-                    <option value="horizontal">Horizontal</option>
-                  </select>
-                </label>
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                      <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </button>
+                  <button
+                    className={`table-config__toggle-btn${table.shape === 'rectangle' ? ' table-config__toggle-btn--active' : ''}`}
+                    title="Rectangle"
+                    onClick={() =>
+                      dispatch({
+                        type: 'UPDATE_TABLE',
+                        tableId: table.id,
+                        changes: { shape: 'rectangle' as TableShape },
+                      })
+                    }
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                      <rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              {table.shape === 'rectangle' && (
+                <div className="table-config__control">
+                  <div className="table-config__toggle-group">
+                    <button
+                      className={`table-config__toggle-btn${(table.orientation ?? 'vertical') === 'vertical' ? ' table-config__toggle-btn--active' : ''}`}
+                      title="Vertical"
+                      onClick={() =>
+                        dispatch({
+                          type: 'UPDATE_TABLE',
+                          tableId: table.id,
+                          changes: { orientation: 'vertical' as TableOrientation },
+                        })
+                      }
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16">
+                        <rect x="4.5" y="1.5" width="7" height="13" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </button>
+                    <button
+                      className={`table-config__toggle-btn${(table.orientation ?? 'vertical') === 'horizontal' ? ' table-config__toggle-btn--active' : ''}`}
+                      title="Horizontal"
+                      onClick={() =>
+                        dispatch({
+                          type: 'UPDATE_TABLE',
+                          tableId: table.id,
+                          changes: { orientation: 'horizontal' as TableOrientation },
+                        })
+                      }
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16">
+                        <rect x="1.5" y="4.5" width="13" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               )}
               <label className="table-config__control">
                 <span>Seats</span>
@@ -81,12 +115,12 @@ export function TableConfigurator() {
                   type="number"
                   value={table.seatCount}
                   min={1}
-                  max={20}
+                  max={10}
                   onChange={(e) =>
                     dispatch({
                       type: 'UPDATE_TABLE',
                       tableId: table.id,
-                      changes: { seatCount: Math.max(1, Math.min(20, parseInt(e.target.value) || 1)) },
+                      changes: { seatCount: Math.max(1, Math.min(10, parseInt(e.target.value) || 1)) },
                     })
                   }
                   className="table-config__number-input"

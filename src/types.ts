@@ -37,4 +37,5 @@ export type Action =
   | { type: 'UNASSIGN_GUEST'; guestId: string }
   | { type: 'MOVE_GUEST'; guestId: string; toTableId: string; toSeatIndex: number }
   | { type: 'SWAP_GUESTS'; seatKeyA: string; seatKeyB: string }
-  | { type: 'MOVE_TABLE'; tableId: string; x: number; y: number };
+  | { type: 'MOVE_TABLE'; tableId: string; x: number; y: number }
+  | { type: 'RESET' };

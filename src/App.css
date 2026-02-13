@@ -6,6 +6,9 @@
 }
 
 .app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 16px 24px;
   background: var(--panel-bg);
   border-bottom: 1px solid var(--border-color);
@@ -15,6 +18,67 @@
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.app__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app__info-wrapper {
+  position: relative;
+}
+
+.app__info-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app__info-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.app__info-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  padding: 10px 12px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.app__reset-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.app__reset-btn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
 }
 
 .app__body {

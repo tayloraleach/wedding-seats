@@ -11,7 +11,7 @@ export function weddingReducer(state: WeddingState, action: Action): WeddingStat
   switch (action.type) {
     case 'ADD_GUEST': {
       const newGuest = { id: generateId(), name: action.name };
-      return { ...state, guests: [...state.guests, newGuest] };
+      return { ...state, guests: [newGuest, ...state.guests] };
     }
 
     case 'REMOVE_GUEST': {
@@ -145,6 +145,9 @@ export function weddingReducer(state: WeddingState, action: Action): WeddingStat
         ),
       };
     }
+
+    case 'RESET':
+      return DEFAULT_STATE;
 
     default:
       return state;

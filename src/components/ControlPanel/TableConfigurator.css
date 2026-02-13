@@ -78,7 +78,8 @@
 
 .table-config__controls {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .table-config__control {
@@ -89,7 +90,6 @@
   color: var(--text-muted);
 }
 
-.table-config__select,
 .table-config__number-input {
   padding: 4px 8px;
   border: 1px solid var(--border-color);
@@ -97,8 +97,39 @@
   font-size: 13px;
   background: var(--surface);
   color: var(--text-primary);
+  width: 55px;
 }
 
-.table-config__number-input {
-  width: 60px;
+.table-config__toggle-group {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.table-config__toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.table-config__toggle-btn+.table-config__toggle-btn {
+  border-left: 1px solid var(--border-color);
+}
+
+.table-config__toggle-btn:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.table-config__toggle-btn--active {
+  background: var(--accent-light);
+  color: var(--accent);
 }
