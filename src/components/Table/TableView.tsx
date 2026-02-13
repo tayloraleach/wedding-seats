@@ -4,7 +4,7 @@ import { useWedding } from '../../state/WeddingContext';
 import { getRectangleSeatPositions } from '../../utils/seatGeometry';
 import { TableSurface } from './TableSurface';
 import { SeatSlot } from './SeatSlot';
-import './TableView.css';
+
 
 interface TableViewProps {
   table: Table;
@@ -138,7 +138,7 @@ export function TableView({ table }: TableViewProps) {
 
   return (
     <div
-      className="table-view"
+      className="relative shrink-0"
       style={{
         width: containerSize.width,
         height: containerSize.height,

@@ -2,7 +2,8 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { ZoomIn, ZoomOut } from 'lucide-react';
 import { useWedding } from '../../state/WeddingContext';
 import { TableView } from '../Table/TableView';
-import './FloorPlan.css';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 1.5;
@@ -22,7 +23,6 @@ export function FloorPlan() {
   const containerRef = useRef<HTMLDivElement>(null);
   const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
 
-  // Keep a ref in sync so the wheel handler always reads latest values
   const viewRef = useRef({ zoom: 1, panX: 0, panY: 0 });
   viewRef.current = { zoom, panX: pan.x, panY: pan.y };
 
@@ -52,7 +52,6 @@ export function FloorPlan() {
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
-  // Space key tracking for pan mode
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space' && e.target === document.body) {
@@ -119,23 +118,25 @@ export function FloorPlan() {
   };
 
   const zoomPercent = Math.round(zoom * 100);
-  const cursorClass = spaceHeld ? (isPanning ? 'floor-plan--grabbing' : 'floor-plan--grab') : '';
 
   return (
     <div
-      className={`floor-plan ${cursorClass}`}
+      className={cn(
+        'flex-1 overflow-hidden relative',
+        spaceHeld && (isPanning ? 'cursor-grabbing' : 'cursor-grab')
+      )}
       ref={containerRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
       {state.tables.length === 0 ? (
-        <div className="floor-plan__empty">
+        <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
           <p>No tables yet. Add tables using the panel on the left.</p>
         </div>
       ) : (
         <div
-          className="floor-plan__canvas"
+          className="relative min-w-full min-h-full"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: 'top left',
@@ -146,10 +147,20 @@ export function FloorPlan() {
           ))}
         </div>
       )}
-      <div className="floor-plan__zoom-controls">
-        <button onClick={zoomOut} disabled={zoom <= MIN_ZOOM} title="Zoom out"><ZoomOut size={14} /></button>
-        <button onClick={zoomReset} className="floor-plan__zoom-label" title="Reset zoom">{zoomPercent}%</button>
-        <button onClick={zoomIn} disabled={zoom >= MAX_ZOOM} title="Zoom in"><ZoomIn size={14} /></button>
+      <div className="absolute bottom-3 right-3 flex items-center gap-0.5 bg-background border rounded-md shadow-sm overflow-hidden z-10">
+        <Button variant="ghost" size="icon-xs" onClick={zoomOut} disabled={zoom <= MIN_ZOOM} title="Zoom out">
+          <ZoomOut className="size-3.5" />
+        </Button>
+        <button
+          onClick={zoomReset}
+          className="text-[11px] min-w-[44px] text-center text-muted-foreground bg-transparent border-none cursor-pointer py-1.5 px-2.5 hover:bg-secondary"
+          title="Reset zoom"
+        >
+          {zoomPercent}%
+        </button>
+        <Button variant="ghost" size="icon-xs" onClick={zoomIn} disabled={zoom >= MAX_ZOOM} title="Zoom in">
+          <ZoomIn className="size-3.5" />
+        </Button>
       </div>
     </div>
   );

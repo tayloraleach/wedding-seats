@@ -1,24 +1,29 @@
+import { X } from 'lucide-react';
 import { useWedding } from '../../state/WeddingContext';
 import type { TableShape, TableOrientation } from '../../types';
-import './TableConfigurator.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 export function TableConfigurator() {
   const { state, dispatch } = useWedding();
 
   return (
-    <div className="table-config">
-      <h3>Tables ({state.tables.length})</h3>
-      <button
+    <div>
+      <h3 className="text-sm font-semibold mb-3">Tables ({state.tables.length})</h3>
+      <Button
+        variant="outline"
+        className="w-full mb-3 border-dashed text-muted-foreground"
         onClick={() => dispatch({ type: 'ADD_TABLE' })}
-        className="table-config__add-btn"
       >
         + Add Table
-      </button>
-      <div className="table-config__list">
+      </Button>
+      <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
         {state.tables.map((table) => (
-          <div key={table.id} className="table-config__item">
-            <div className="table-config__item-header">
-              <input
+          <Card key={table.id} className="p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Input
                 type="text"
                 value={table.label}
                 onChange={(e) =>
@@ -28,90 +33,76 @@ export function TableConfigurator() {
                     changes: { label: e.target.value },
                   })
                 }
-                className="table-config__label-input"
+                className="flex-1 h-7 text-sm font-medium border-transparent bg-transparent focus:bg-secondary"
               />
-              <button
+              <Button
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => dispatch({ type: 'REMOVE_TABLE', tableId: table.id })}
-                className="table-config__remove-btn"
                 title="Remove table"
+                className="text-muted-foreground hover:text-destructive"
               >
-                &times;
-              </button>
+                <X />
+              </Button>
             </div>
-            <div className="table-config__controls">
-              <div className="table-config__control">
-                <div className="table-config__toggle-group">
-                  <button
-                    className={`table-config__toggle-btn${table.shape === 'round' ? ' table-config__toggle-btn--active' : ''}`}
-                    title="Round"
-                    onClick={() =>
-                      dispatch({
-                        type: 'UPDATE_TABLE',
-                        tableId: table.id,
-                        changes: { shape: 'round' as TableShape },
-                      })
-                    }
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16">
-                      <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                    </svg>
-                  </button>
-                  <button
-                    className={`table-config__toggle-btn${table.shape === 'rectangle' ? ' table-config__toggle-btn--active' : ''}`}
-                    title="Rectangle"
-                    onClick={() =>
-                      dispatch({
-                        type: 'UPDATE_TABLE',
-                        tableId: table.id,
-                        changes: { shape: 'rectangle' as TableShape },
-                      })
-                    }
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16">
-                      <rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <ToggleGroup
+                type="single"
+                value={table.shape}
+                onValueChange={(value) => {
+                  if (value) {
+                    dispatch({
+                      type: 'UPDATE_TABLE',
+                      tableId: table.id,
+                      changes: { shape: value as TableShape },
+                    });
+                  }
+                }}
+                variant="outline"
+                size="sm"
+              >
+                <ToggleGroupItem value="round" aria-label="Round" className="px-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
+                </ToggleGroupItem>
+                <ToggleGroupItem value="rectangle" aria-label="Rectangle" className="px-2">
+                  <svg width="16" height="16" viewBox="0 0 16 16">
+                    <rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
+                </ToggleGroupItem>
+              </ToggleGroup>
               {table.shape === 'rectangle' && (
-                <div className="table-config__control">
-                  <div className="table-config__toggle-group">
-                    <button
-                      className={`table-config__toggle-btn${(table.orientation ?? 'vertical') === 'vertical' ? ' table-config__toggle-btn--active' : ''}`}
-                      title="Vertical"
-                      onClick={() =>
-                        dispatch({
-                          type: 'UPDATE_TABLE',
-                          tableId: table.id,
-                          changes: { orientation: 'vertical' as TableOrientation },
-                        })
-                      }
-                    >
-                      <svg width="16" height="16" viewBox="0 0 16 16">
-                        <rect x="4.5" y="1.5" width="7" height="13" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                    </button>
-                    <button
-                      className={`table-config__toggle-btn${(table.orientation ?? 'vertical') === 'horizontal' ? ' table-config__toggle-btn--active' : ''}`}
-                      title="Horizontal"
-                      onClick={() =>
-                        dispatch({
-                          type: 'UPDATE_TABLE',
-                          tableId: table.id,
-                          changes: { orientation: 'horizontal' as TableOrientation },
-                        })
-                      }
-                    >
-                      <svg width="16" height="16" viewBox="0 0 16 16">
-                        <rect x="1.5" y="4.5" width="13" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                <ToggleGroup
+                  type="single"
+                  value={table.orientation ?? 'vertical'}
+                  onValueChange={(value) => {
+                    if (value) {
+                      dispatch({
+                        type: 'UPDATE_TABLE',
+                        tableId: table.id,
+                        changes: { orientation: value as TableOrientation },
+                      });
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  <ToggleGroupItem value="vertical" aria-label="Vertical" className="px-2">
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                      <rect x="4.5" y="1.5" width="7" height="13" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="horizontal" aria-label="Horizontal" className="px-2">
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                      <rect x="1.5" y="4.5" width="13" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </ToggleGroupItem>
+                </ToggleGroup>
               )}
-              <label className="table-config__control">
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span>Seats</span>
-                <input
+                <Input
                   type="number"
                   value={table.seatCount}
                   min={1}
@@ -123,11 +114,11 @@ export function TableConfigurator() {
                       changes: { seatCount: Math.max(1, Math.min(10, parseInt(e.target.value) || 1)) },
                     })
                   }
-                  className="table-config__number-input"
+                  className="w-14 h-7 text-xs"
                 />
               </label>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

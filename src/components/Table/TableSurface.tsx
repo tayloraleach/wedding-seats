@@ -13,38 +13,17 @@ interface TableSurfaceProps {
 export function TableSurface({ shape, width, height, label, onPointerDown, onPointerMove, onPointerUp }: TableSurfaceProps) {
   return (
     <div
-      className="table-surface"
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-grab touch-none bg-muted border-2 border-border"
       style={{
         width,
         height,
         borderRadius: shape === 'round' ? '50%' : 8,
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
-        background: 'var(--table-bg)',
-        border: '2px solid var(--table-border)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'grab',
-        touchAction: 'none',
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
     >
-      <span
-        style={{
-          fontSize: 13,
-          fontWeight: 600,
-          color: 'var(--table-text)',
-          textAlign: 'center',
-          padding: 8,
-          lineHeight: 1.2,
-          pointerEvents: 'none',
-        }}
-      >
+      <span className="text-[13px] font-semibold text-muted-foreground text-center p-2 leading-tight pointer-events-none">
         {label}
       </span>
     </div>

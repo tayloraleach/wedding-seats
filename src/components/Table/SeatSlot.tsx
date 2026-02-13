@@ -2,7 +2,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { useWedding } from '../../state/WeddingContext';
 import { GuestChip } from '../Guest/GuestChip';
 import { seatKey } from '../../utils/ids';
-import './SeatSlot.css';
+import { cn } from '@/lib/utils';
 
 interface SeatSlotProps {
   tableId: string;
@@ -27,7 +27,14 @@ export function SeatSlot({ tableId, seatIndex, x, y, align, flow }: SeatSlotProp
   return (
     <div
       ref={setNodeRef}
-      className={`seat-slot ${isOver ? 'seat-slot--over' : ''} ${guest ? 'seat-slot--occupied' : ''} ${flow ? 'seat-slot--flow' : ''}`}
+      className={cn(
+        'flex items-center justify-center rounded-2xl border-2 border-dashed transition-all z-[1] whitespace-nowrap',
+        flow ? 'relative' : 'absolute',
+        guest
+          ? 'w-auto border-none bg-transparent'
+          : 'w-16 h-8 border-border bg-secondary',
+        isOver && 'border-primary bg-accent shadow-[0_0_0_3px_var(--accent)]'
+      )}
       style={flow ? undefined : {
         left: x,
         top: y,
@@ -43,7 +50,7 @@ export function SeatSlot({ tableId, seatIndex, x, y, align, flow }: SeatSlotProp
       {guest ? (
         <GuestChip guest={guest} fromSeatKey={key} />
       ) : (
-        <span className="seat-slot__number">{seatIndex + 1}</span>
+        <span className="text-[11px] text-muted-foreground font-medium">{seatIndex + 1}</span>
       )}
     </div>
   );

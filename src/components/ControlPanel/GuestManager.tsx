@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
+import { X } from 'lucide-react';
 import { useWedding } from '../../state/WeddingContext';
-import './GuestManager.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export function GuestManager() {
   const { state, dispatch } = useWedding();
@@ -40,47 +42,51 @@ export function GuestManager() {
   };
 
   return (
-    <div className="guest-manager">
-      <h3>Guests ({state.guests.length})</h3>
-      <div className="guest-manager__input-row">
-        <input
+    <div>
+      <h3 className="text-sm font-semibold mb-3">Guests ({state.guests.length})</h3>
+      <div className="flex gap-2 mb-3">
+        <Input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Guest name"
-          className="guest-manager__input"
+          className="flex-1"
         />
-        <button onClick={handleAdd} className="guest-manager__add-btn">
+        <Button onClick={handleAdd} size="sm">
           Add
-        </button>
+        </Button>
       </div>
-      <div className="guest-manager__import-row">
+      <div className="mb-3">
         <input
           ref={fileInputRef}
           type="file"
           accept=".json"
           onChange={handleFileUpload}
-          className="guest-manager__file-input"
+          className="hidden"
         />
-        <button
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full"
           onClick={() => fileInputRef.current?.click()}
-          className="guest-manager__import-btn"
         >
-          Import JSON
-        </button>
+          Import Guests (JSON)
+        </Button>
       </div>
-      <ul className="guest-manager__list">
+      <ul className="list-none p-0 m-0 max-h-[200px] overflow-y-auto">
         {state.guests.map((guest) => (
-          <li key={guest.id} className="guest-manager__item">
+          <li key={guest.id} className="flex items-center justify-between px-2 py-1.5 rounded text-sm hover:bg-secondary">
             <span>{guest.name}</span>
-            <button
+            <Button
+              variant="ghost"
+              size="icon-xs"
               onClick={() => dispatch({ type: 'REMOVE_GUEST', guestId: guest.id })}
-              className="guest-manager__remove-btn"
               title="Remove guest"
+              className="text-muted-foreground hover:text-destructive"
             >
-              &times;
-            </button>
+              <X />
+            </Button>
           </li>
         ))}
       </ul>
