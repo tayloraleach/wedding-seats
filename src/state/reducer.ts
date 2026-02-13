@@ -50,7 +50,7 @@ export function weddingReducer(state: WeddingState, action: Action): WeddingStat
         x: 40 + col * 320,
         y: 40 + row * 320,
       };
-      return { ...state, tables: [...state.tables, newTable] };
+      return { ...state, tables: [newTable, ...state.tables] };
     }
 
     case 'REMOVE_TABLE': {
