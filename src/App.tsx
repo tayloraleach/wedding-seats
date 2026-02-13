@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -15,7 +15,7 @@ import { FloorPlan } from './components/FloorPlan/FloorPlan';
 import { UnassignedPool } from './components/UnassignedPool/UnassignedPool';
 import { GuestChip } from './components/Guest/GuestChip';
 import { seatKey } from './utils/ids';
-import type { Guest } from './types';
+import type { Guest, WeddingState } from './types';
 import './App.css';
 
 function App() {
@@ -24,9 +24,71 @@ function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [poolCollapsed, setPoolCollapsed] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const infoTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const importFileRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [menuOpen]);
+
+  const handleExport = () => {
+    setMenuOpen(false);
+    const json = JSON.stringify(state, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'wedding-seating.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportClick = () => {
+    setMenuOpen(false);
+    importFileRef.current?.click();
+  };
+
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target?.result as string);
+        if (parsed && Array.isArray(parsed.guests) && Array.isArray(parsed.tables) && parsed.seatAssignments) {
+          if (window.confirm('This will replace all current data. Continue?')) {
+            dispatch({ type: 'LOAD_STATE', state: parsed as WeddingState });
+          }
+        } else if (Array.isArray(parsed)) {
+          const names = parsed.filter((item): item is string => typeof item === 'string');
+          if (names.length > 0) {
+            dispatch({ type: 'IMPORT_GUESTS', names });
+          } else {
+            alert('JSON array contained no valid name strings.');
+          }
+        } else {
+          alert('Unrecognized format. Expected a full state export or an array of guest names.');
+        }
+      } catch {
+        alert('Invalid JSON file.');
+      }
+      if (importFileRef.current) importFileRef.current.value = '';
+    };
+    reader.readAsText(file);
+  };
 
   const handleReset = () => {
+    setMenuOpen(false);
     if (window.confirm('This will remove all guests, tables, and seating assignments. Continue?')) {
       dispatch({ type: 'RESET' });
     }
@@ -126,9 +188,36 @@ function App() {
                 </div>
               )}
             </div>
-            <button className="app__reset-btn" onClick={handleReset}>
-              Reset
-            </button>
+            <input
+              ref={importFileRef}
+              type="file"
+              accept=".json"
+              onChange={handleImportFile}
+              className="app__file-input"
+            />
+            <div className="app__menu-wrapper" ref={menuRef}>
+              <button
+                className="app__menu-btn"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Menu"
+              >
+                Menu
+              </button>
+              {menuOpen && (
+                <div className="app__menu-dropdown">
+                  <button className="app__menu-item" onClick={handleImportClick}>
+                    Import JSON
+                  </button>
+                  <button className="app__menu-item" onClick={handleExport}>
+                    Export JSON
+                  </button>
+                  <hr className="app__menu-divider" />
+                  <button className="app__menu-item app__menu-item--danger" onClick={handleReset}>
+                    Reset all data
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
         <div className="app__body">

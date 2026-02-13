@@ -146,6 +146,9 @@ export function weddingReducer(state: WeddingState, action: Action): WeddingStat
       };
     }
 
+    case 'LOAD_STATE':
+      return action.state;
+
     case 'RESET':
       return DEFAULT_STATE;
 

@@ -38,4 +38,5 @@ export type Action =
   | { type: 'MOVE_GUEST'; guestId: string; toTableId: string; toSeatIndex: number }
   | { type: 'SWAP_GUESTS'; seatKeyA: string; seatKeyB: string }
   | { type: 'MOVE_TABLE'; tableId: string; x: number; y: number }
+  | { type: 'LOAD_STATE'; state: WeddingState }
   | { type: 'RESET' };
