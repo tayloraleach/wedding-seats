@@ -3,7 +3,7 @@
   background: var(--panel-bg);
   border-top: 1px solid var(--border-color);
   min-height: 80px;
-  transition: background 0.15s;
+  transition: background 0.15s, min-height 0.25s ease, padding 0.25s ease;
 }
 
 .unassigned-pool--over {

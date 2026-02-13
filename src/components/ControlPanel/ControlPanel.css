@@ -5,6 +5,7 @@
   background: var(--panel-bg);
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
+  overflow-x: hidden;
   height: 100%;
 }
 

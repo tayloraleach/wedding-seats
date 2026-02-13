@@ -22,6 +22,8 @@ function App() {
   const [state, dispatch] = usePersistedState();
   const [activeGuest, setActiveGuest] = useState<Guest | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [poolCollapsed, setPoolCollapsed] = useState(false);
   const infoTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleReset = () => {
@@ -121,7 +123,17 @@ function App() {
           </div>
         </header>
         <div className="app__body">
-          <ControlPanel />
+          <div className={`app__sidebar ${sidebarCollapsed ? 'app__sidebar--collapsed' : ''}`}>
+            <ControlPanel />
+          </div>
+          <button
+            className="app__sidebar-toggle"
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            aria-label={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
+            title={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
+          >
+            {sidebarCollapsed ? '›' : '‹'}
+          </button>
           <div className="app__main">
             <DndContext
               sensors={sensors}
@@ -130,7 +142,17 @@ function App() {
               onDragCancel={handleDragCancel}
             >
               <FloorPlan />
-              <UnassignedPool />
+              <div className={`app__pool ${poolCollapsed ? 'app__pool--collapsed' : ''}`}>
+                <button
+                  className="app__pool-toggle"
+                  onClick={() => setPoolCollapsed(!poolCollapsed)}
+                  aria-label={poolCollapsed ? 'Show unassigned guests' : 'Hide unassigned guests'}
+                  title={poolCollapsed ? 'Show unassigned guests' : 'Hide unassigned guests'}
+                >
+                  {poolCollapsed ? '▲ Unassigned' : '▼ Hide'}
+                </button>
+                <UnassignedPool />
+              </div>
               <DragOverlay dropAnimation={{ duration: 200, easing: 'ease' }}>
                 {activeGuest ? <GuestChip guest={activeGuest} isOverlay /> : null}
               </DragOverlay>
