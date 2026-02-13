@@ -22,7 +22,7 @@ function App() {
   const [state, dispatch] = usePersistedState();
   const [activeGuest, setActiveGuest] = useState<Guest | null>(null);
   const [showInfo, setShowInfo] = useState(false);
-  const infoTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const infoTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleReset = () => {
     if (window.confirm('This will remove all guests, tables, and seating assignments. Continue?')) {
