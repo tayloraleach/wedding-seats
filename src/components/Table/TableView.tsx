@@ -1,7 +1,7 @@
 import { useMemo, useRef, useCallback } from 'react';
 import type { Table } from '../../types';
 import { useWedding } from '../../state/WeddingContext';
-import { getRoundSeatPositions, getRectangleSeatPositions } from '../../utils/seatGeometry';
+import { getRectangleSeatPositions } from '../../utils/seatGeometry';
 import { TableSurface } from './TableSurface';
 import { SeatSlot } from './SeatSlot';
 import './TableView.css';
@@ -10,7 +10,7 @@ interface TableViewProps {
   table: Table;
 }
 
-const SEAT_OFFSET = 40; // how far seats sit from the table edge
+const SEAT_OFFSET = 12; // how far seats sit from the table edge
 const TABLE_ROUND_RADIUS = 70;
 const TABLE_RECT_WIDTH = 80;
 const TABLE_RECT_HEIGHT = 200;
@@ -30,13 +30,30 @@ export function TableView({ table }: TableViewProps) {
     };
   }, [table.shape]);
 
-  const seatPositions = useMemo(() => {
+  const seatPositions = useMemo((): { x: number; y: number; align?: 'left' | 'right' }[] => {
     const cx = containerSize.width / 2;
     const cy = containerSize.height / 2;
 
     if (table.shape === 'round') {
-      const seatRadius = TABLE_ROUND_RADIUS + SEAT_OFFSET;
-      return getRoundSeatPositions(table.seatCount, seatRadius, { x: cx, y: cy });
+      const baseSeatRadius = TABLE_ROUND_RADIUS + SEAT_OFFSET;
+      const positions: { x: number; y: number; align?: 'left' | 'right' }[] = [];
+      for (let i = 0; i < table.seatCount; i++) {
+        const angle = (2 * Math.PI * i) / table.seatCount - Math.PI / 2;
+        const cosA = Math.cos(angle);
+        // Push top/bottom seats out a bit more since centered labels sit closer
+        const r = baseSeatRadius + Math.abs(Math.sin(angle)) * SEAT_OFFSET;
+        // Right half → left-align (extends right), left half → right-align (extends left)
+        // Near top/bottom (|cos| < 0.3) → centered
+        let align: 'left' | 'right' | undefined;
+        if (cosA > 0.3) align = 'left';
+        else if (cosA < -0.3) align = 'right';
+        positions.push({
+          x: cx + r * Math.cos(angle),
+          y: cy + r * Math.sin(angle),
+          align,
+        });
+      }
+      return positions;
     }
 
     // Rectangle: seats only on left and right long edges
@@ -56,6 +73,7 @@ export function TableView({ table }: TableViewProps) {
       return {
         x: isLeft ? tableLeft - SEAT_OFFSET : tableLeft + TABLE_RECT_WIDTH + SEAT_OFFSET,
         y: tableTop + p.y,
+        align: (isLeft ? 'right' : 'left') as 'left' | 'right',
       };
     });
   }, [table.shape, table.seatCount, containerSize]);
@@ -126,6 +144,7 @@ export function TableView({ table }: TableViewProps) {
           seatIndex={i}
           x={pos.x}
           y={pos.y}
+          align={pos.align}
         />
       ))}
     </div>

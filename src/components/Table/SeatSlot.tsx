@@ -9,9 +9,10 @@ interface SeatSlotProps {
   seatIndex: number;
   x: number;
   y: number;
+  align?: 'left' | 'right';
 }
 
-export function SeatSlot({ tableId, seatIndex, x, y }: SeatSlotProps) {
+export function SeatSlot({ tableId, seatIndex, x, y, align }: SeatSlotProps) {
   const { state } = useWedding();
   const key = seatKey(tableId, seatIndex);
   const guestId = state.seatAssignments[key];
@@ -29,7 +30,11 @@ export function SeatSlot({ tableId, seatIndex, x, y }: SeatSlotProps) {
       style={{
         left: x,
         top: y,
-        transform: 'translate(-50%, -50%)',
+        transform: align === 'left'
+          ? 'translate(0%, -50%)'
+          : align === 'right'
+            ? 'translate(-100%, -50%)'
+            : 'translate(-50%, -50%)',
       }}
       title={guest ? guest.name : `Seat ${seatIndex + 1}`}
     >
