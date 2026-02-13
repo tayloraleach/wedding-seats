@@ -1,7 +1,15 @@
 .floor-plan {
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
   position: relative;
+}
+
+.floor-plan--grab {
+  cursor: grab;
+}
+
+.floor-plan--grabbing {
+  cursor: grabbing;
 }
 
 .floor-plan__canvas {
@@ -17,4 +25,46 @@
   height: 100%;
   color: var(--text-muted);
   font-size: 15px;
+}
+
+.floor-plan__zoom-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.floor-plan__zoom-controls button {
+  border: none;
+  background: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.floor-plan__zoom-controls button:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.floor-plan__zoom-controls button:disabled {
+  color: var(--text-muted);
+  cursor: default;
+  opacity: 0.4;
+}
+
+.floor-plan__zoom-label {
+  font-size: 11px !important;
+  min-width: 44px;
+  text-align: center;
+  color: var(--text-muted) !important;
 }

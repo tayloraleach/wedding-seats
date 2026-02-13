@@ -110,10 +110,19 @@ function App() {
                 infoTimeout.current = setTimeout(() => setShowInfo(false), 150);
               }}
             >
-              <button className="app__info-btn" aria-label="Storage info">?</button>
+              <button className="app__info-btn" aria-label="Help &amp; info">?</button>
               {showInfo && (
                 <div className="app__info-tooltip">
-                  Your data is saved automatically to this browser's local storage. Nothing is sent to a server.
+                  <strong>Controls</strong>
+                  <ul className="app__info-list">
+                    <li>Scroll wheel — zoom in/out</li>
+                    <li>Space + drag — pan around</li>
+                    <li>Drag guests to seats or back to unassigned</li>
+                  </ul>
+                  <strong>Storage</strong>
+                  <p className="app__info-text">
+                    Data is saved automatically to local storage. Nothing is sent to a server.
+                  </p>
                 </div>
               )}
             </div>

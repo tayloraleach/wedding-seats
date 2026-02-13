@@ -54,8 +54,8 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: 220px;
-  padding: 10px 12px;
+  width: 240px;
+  padding: 12px 14px;
   background: var(--panel-bg);
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -64,6 +64,28 @@
   color: var(--text-muted);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   z-index: 100;
+}
+
+.app__info-tooltip strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.app__info-list {
+  margin: 0 0 10px;
+  padding-left: 16px;
+}
+
+.app__info-list li {
+  margin-bottom: 2px;
+}
+
+.app__info-text {
+  margin: 0;
 }
 
 .app__reset-btn {
