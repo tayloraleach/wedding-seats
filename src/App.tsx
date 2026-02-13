@@ -15,6 +15,17 @@ import { FloorPlan } from './components/FloorPlan/FloorPlan';
 import { UnassignedPool } from './components/UnassignedPool/UnassignedPool';
 import { GuestChip } from './components/Guest/GuestChip';
 import { seatKey } from './utils/ids';
+import {
+  HelpCircle,
+  EllipsisVertical,
+  Upload,
+  Download,
+  Trash2,
+  PanelLeftClose,
+  PanelLeftOpen,
+  ChevronUp,
+  ChevronDown,
+} from 'lucide-react';
 import type { Guest, WeddingState } from './types';
 import './App.css';
 
@@ -172,7 +183,7 @@ function App() {
                 infoTimeout.current = setTimeout(() => setShowInfo(false), 150);
               }}
             >
-              <button className="app__info-btn" aria-label="Help &amp; info">?</button>
+              <button className="app__info-btn" aria-label="Help &amp; info"><HelpCircle size={14} /></button>
               {showInfo && (
                 <div className="app__info-tooltip">
                   <strong>Controls</strong>
@@ -201,19 +212,19 @@ function App() {
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label="Menu"
               >
-                Menu
+                <EllipsisVertical size={16} />
               </button>
               {menuOpen && (
                 <div className="app__menu-dropdown">
                   <button className="app__menu-item" onClick={handleImportClick}>
-                    Import JSON
+                    <Upload size={14} /> Import JSON
                   </button>
                   <button className="app__menu-item" onClick={handleExport}>
-                    Export JSON
+                    <Download size={14} /> Export JSON
                   </button>
                   <hr className="app__menu-divider" />
                   <button className="app__menu-item app__menu-item--danger" onClick={handleReset}>
-                    Reset all data
+                    <Trash2 size={14} /> Reset all data
                   </button>
                 </div>
               )}
@@ -230,7 +241,7 @@ function App() {
             aria-label={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
             title={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
           >
-            {sidebarCollapsed ? '›' : '‹'}
+            {sidebarCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
           </button>
           <div className="app__main">
             <DndContext
@@ -247,7 +258,7 @@ function App() {
                   aria-label={poolCollapsed ? 'Show unassigned guests' : 'Hide unassigned guests'}
                   title={poolCollapsed ? 'Show unassigned guests' : 'Hide unassigned guests'}
                 >
-                  {poolCollapsed ? '▲ Unassigned' : '▼ Hide'}
+                  {poolCollapsed ? <><ChevronUp size={12} /> Unassigned</> : <><ChevronDown size={12} /> Hide</>}
                 </button>
                 <UnassignedPool />
               </div>

@@ -31,14 +31,12 @@
 }
 
 .app__info-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
   border: 1px solid var(--border-color);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -98,13 +96,16 @@
 }
 
 .app__menu-btn {
-  padding: 6px 14px;
+  width: 30px;
+  height: 30px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background: var(--surface);
-  color: var(--text-primary);
-  font-size: 13px;
+  color: var(--text-muted);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app__menu-btn:hover {
@@ -126,7 +127,9 @@
 }
 
 .app__menu-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   padding: 8px 14px;
   border: none;

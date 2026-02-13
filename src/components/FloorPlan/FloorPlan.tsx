@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { ZoomIn, ZoomOut } from 'lucide-react';
 import { useWedding } from '../../state/WeddingContext';
 import { TableView } from '../Table/TableView';
 import './FloorPlan.css';
@@ -146,9 +147,9 @@ export function FloorPlan() {
         </div>
       )}
       <div className="floor-plan__zoom-controls">
-        <button onClick={zoomOut} disabled={zoom <= MIN_ZOOM} title="Zoom out">−</button>
+        <button onClick={zoomOut} disabled={zoom <= MIN_ZOOM} title="Zoom out"><ZoomOut size={14} /></button>
         <button onClick={zoomReset} className="floor-plan__zoom-label" title="Reset zoom">{zoomPercent}%</button>
-        <button onClick={zoomIn} disabled={zoom >= MAX_ZOOM} title="Zoom in">+</button>
+        <button onClick={zoomIn} disabled={zoom >= MAX_ZOOM} title="Zoom in"><ZoomIn size={14} /></button>
       </div>
     </div>
   );
