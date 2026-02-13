@@ -20,36 +20,40 @@ export function getRoundSeatPositions(
 }
 
 /**
- * Distributes seats along only the two long (left & right) edges of a vertical rectangle.
- * The rectangle is taller than wide, so the long edges are left and right.
+ * Distributes seats along the two long edges of a rectangle.
+ * Vertical: seats on left (x=0) and right (x=width) edges.
+ * Horizontal: seats on top (y=0) and bottom (y=height) edges.
  */
 export function getRectangleSeatPositions(
   total: number,
   width: number,
-  height: number
+  height: number,
+  orientation: 'vertical' | 'horizontal' = 'vertical'
 ): Point[] {
   if (total === 0) return [];
 
   const positions: Point[] = [];
+  const firstCount = Math.ceil(total / 2);
+  const secondCount = total - firstCount;
 
-  // Split evenly between left and right edges
-  const leftCount = Math.ceil(total / 2);
-  const rightCount = total - leftCount;
-
-  // Left edge: top to bottom
-  for (let i = 0; i < leftCount; i++) {
-    positions.push({
-      x: 0,
-      y: ((i + 1) / (leftCount + 1)) * height,
-    });
-  }
-
-  // Right edge: top to bottom
-  for (let i = 0; i < rightCount; i++) {
-    positions.push({
-      x: width,
-      y: ((i + 1) / (rightCount + 1)) * height,
-    });
+  if (orientation === 'vertical') {
+    // Left edge: top to bottom
+    for (let i = 0; i < firstCount; i++) {
+      positions.push({ x: 0, y: ((i + 1) / (firstCount + 1)) * height });
+    }
+    // Right edge: top to bottom
+    for (let i = 0; i < secondCount; i++) {
+      positions.push({ x: width, y: ((i + 1) / (secondCount + 1)) * height });
+    }
+  } else {
+    // Top edge: left to right
+    for (let i = 0; i < firstCount; i++) {
+      positions.push({ x: ((i + 1) / (firstCount + 1)) * width, y: 0 });
+    }
+    // Bottom edge: left to right
+    for (let i = 0; i < secondCount; i++) {
+      positions.push({ x: ((i + 1) / (secondCount + 1)) * width, y: height });
+    }
   }
 
   return positions;

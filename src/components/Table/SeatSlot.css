@@ -21,6 +21,10 @@
   border: none;
 }
 
+.seat-slot--flow {
+  position: relative;
+}
+
 .seat-slot--over {
   border-color: var(--accent);
   background: var(--accent-light);

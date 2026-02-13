@@ -5,10 +5,13 @@ export interface Guest {
   name: string;
 }
 
+export type TableOrientation = 'vertical' | 'horizontal';
+
 export interface Table {
   id: string;
   label: string;
   shape: TableShape;
+  orientation?: TableOrientation;
   seatCount: number;
   x: number;
   y: number;
@@ -29,7 +32,7 @@ export type Action =
   | { type: 'IMPORT_GUESTS'; names: string[] }
   | { type: 'ADD_TABLE' }
   | { type: 'REMOVE_TABLE'; tableId: string }
-  | { type: 'UPDATE_TABLE'; tableId: string; changes: Partial<Pick<Table, 'label' | 'shape' | 'seatCount'>> }
+  | { type: 'UPDATE_TABLE'; tableId: string; changes: Partial<Pick<Table, 'label' | 'shape' | 'seatCount' | 'orientation'>> }
   | { type: 'ASSIGN_SEAT'; guestId: string; tableId: string; seatIndex: number }
   | { type: 'UNASSIGN_GUEST'; guestId: string }
   | { type: 'MOVE_GUEST'; guestId: string; toTableId: string; toSeatIndex: number }

@@ -14,29 +14,41 @@ const SEAT_OFFSET = 12; // how far seats sit from the table edge
 const TABLE_ROUND_RADIUS = 70;
 const TABLE_RECT_WIDTH = 80;
 const TABLE_RECT_HEIGHT = 200;
-
 export function TableView({ table }: TableViewProps) {
   const { dispatch } = useWedding();
   const dragRef = useRef<{ startX: number; startY: number; tableX: number; tableY: number } | null>(null);
+
+  const orientation = table.orientation ?? 'vertical';
+  const isHorizontal = table.shape === 'rectangle' && orientation === 'horizontal';
+  const rectW = isHorizontal ? TABLE_RECT_HEIGHT : TABLE_RECT_WIDTH;
+  const rectH = isHorizontal ? TABLE_RECT_WIDTH : TABLE_RECT_HEIGHT;
 
   const containerSize = useMemo(() => {
     if (table.shape === 'round') {
       const totalRadius = TABLE_ROUND_RADIUS + SEAT_OFFSET + 32;
       return { width: totalRadius * 2, height: totalRadius * 2 };
     }
+    if (isHorizontal) {
+      return {
+        width: rectW + 32 * 2,
+        height: rectH + (SEAT_OFFSET + 32) * 2,
+      };
+    }
     return {
-      width: TABLE_RECT_WIDTH + (SEAT_OFFSET + 32) * 2,
-      height: TABLE_RECT_HEIGHT + (32) * 2,
+      width: rectW + (SEAT_OFFSET + 32) * 2,
+      height: rectH + (32) * 2,
     };
-  }, [table.shape]);
+  }, [table.shape, isHorizontal, rectW, rectH]);
 
-  const seatPositions = useMemo((): { x: number; y: number; align?: 'left' | 'right' }[] => {
+  type Align = 'left' | 'right' | 'up' | 'down';
+
+  const seatPositions = useMemo((): { x: number; y: number; align?: Align }[] => {
     const cx = containerSize.width / 2;
     const cy = containerSize.height / 2;
 
     if (table.shape === 'round') {
       const baseSeatRadius = TABLE_ROUND_RADIUS + SEAT_OFFSET;
-      const positions: { x: number; y: number; align?: 'left' | 'right' }[] = [];
+      const positions: { x: number; y: number; align?: Align }[] = [];
       for (let i = 0; i < table.seatCount; i++) {
         const angle = (2 * Math.PI * i) / table.seatCount - Math.PI / 2;
         const cosA = Math.cos(angle);
@@ -44,7 +56,7 @@ export function TableView({ table }: TableViewProps) {
         const r = baseSeatRadius + Math.abs(Math.sin(angle)) * SEAT_OFFSET;
         // Right half → left-align (extends right), left half → right-align (extends left)
         // Near top/bottom (|cos| < 0.3) → centered
-        let align: 'left' | 'right' | undefined;
+        let align: Align | undefined;
         if (cosA > 0.3) align = 'left';
         else if (cosA < -0.3) align = 'right';
         positions.push({
@@ -56,30 +68,37 @@ export function TableView({ table }: TableViewProps) {
       return positions;
     }
 
-    // Rectangle: seats only on left and right long edges
+    // Horizontal tables use flex rows, not absolute positioning
+    if (isHorizontal) return [];
+
+    // Vertical rectangle: seats on left and right long edges
     const rawPositions = getRectangleSeatPositions(
       table.seatCount,
-      TABLE_RECT_WIDTH,
-      TABLE_RECT_HEIGHT
+      rectW,
+      rectH,
+      orientation
     );
 
-    // Offset positions so the table is centered in the container
-    const tableLeft = cx - TABLE_RECT_WIDTH / 2;
-    const tableTop = cy - TABLE_RECT_HEIGHT / 2;
+    const tableLeft = cx - rectW / 2;
+    const tableTop = cy - rectH / 2;
 
     return rawPositions.map((p) => {
-      // Seats are on left (x=0) or right (x=width) edge, push them outward
       const isLeft = p.x === 0;
       return {
-        x: isLeft ? tableLeft - SEAT_OFFSET : tableLeft + TABLE_RECT_WIDTH + SEAT_OFFSET,
+        x: isLeft ? tableLeft - SEAT_OFFSET : tableLeft + rectW + SEAT_OFFSET,
         y: tableTop + p.y,
-        align: (isLeft ? 'right' : 'left') as 'left' | 'right',
+        align: (isLeft ? 'right' : 'left') as Align,
       };
     });
-  }, [table.shape, table.seatCount, containerSize]);
+  }, [table.shape, table.seatCount, containerSize, isHorizontal, orientation, rectW, rectH]);
 
-  const surfaceWidth = table.shape === 'round' ? TABLE_ROUND_RADIUS * 2 : TABLE_RECT_WIDTH;
-  const surfaceHeight = table.shape === 'round' ? TABLE_ROUND_RADIUS * 2 : TABLE_RECT_HEIGHT;
+  // For horizontal tables, split seat indices into top/bottom rows
+  const topCount = Math.ceil(table.seatCount / 2);
+  const topSeats = Array.from({ length: topCount }, (_, i) => i);
+  const bottomSeats = Array.from({ length: table.seatCount - topCount }, (_, i) => topCount + i);
+
+  const surfaceWidth = table.shape === 'round' ? TABLE_ROUND_RADIUS * 2 : rectW;
+  const surfaceHeight = table.shape === 'round' ? TABLE_ROUND_RADIUS * 2 : rectH;
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -137,16 +156,45 @@ export function TableView({ table }: TableViewProps) {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       />
-      {seatPositions.map((pos, i) => (
-        <SeatSlot
-          key={i}
-          tableId={table.id}
-          seatIndex={i}
-          x={pos.x}
-          y={pos.y}
-          align={pos.align}
-        />
-      ))}
+      {isHorizontal ? (
+        <>
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: containerSize.height / 2 - rectH / 2 - SEAT_OFFSET,
+            transform: 'translate(-50%, -100%)',
+            display: 'flex',
+            gap: 8,
+          }}>
+            {topSeats.map((i) => (
+              <SeatSlot key={i} tableId={table.id} seatIndex={i} flow />
+            ))}
+          </div>
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: containerSize.height / 2 + rectH / 2 + SEAT_OFFSET,
+            transform: 'translate(-50%, 0%)',
+            display: 'flex',
+            gap: 8,
+          }}>
+            {bottomSeats.map((i) => (
+              <SeatSlot key={i} tableId={table.id} seatIndex={i} flow />
+            ))}
+          </div>
+        </>
+      ) : (
+        seatPositions.map((pos, i) => (
+          <SeatSlot
+            key={i}
+            tableId={table.id}
+            seatIndex={i}
+            x={pos.x}
+            y={pos.y}
+            align={pos.align}
+          />
+        ))
+      )}
     </div>
   );
 }

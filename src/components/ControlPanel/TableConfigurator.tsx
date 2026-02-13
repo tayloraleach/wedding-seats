@@ -1,5 +1,5 @@
 import { useWedding } from '../../state/WeddingContext';
-import type { TableShape } from '../../types';
+import type { TableShape, TableOrientation } from '../../types';
 import './TableConfigurator.css';
 
 export function TableConfigurator() {
@@ -56,6 +56,25 @@ export function TableConfigurator() {
                   <option value="rectangle">Rectangle</option>
                 </select>
               </label>
+              {table.shape === 'rectangle' && (
+                <label className="table-config__control">
+                  <span>Orientation</span>
+                  <select
+                    value={table.orientation ?? 'vertical'}
+                    onChange={(e) =>
+                      dispatch({
+                        type: 'UPDATE_TABLE',
+                        tableId: table.id,
+                        changes: { orientation: e.target.value as TableOrientation },
+                      })
+                    }
+                    className="table-config__select"
+                  >
+                    <option value="vertical">Vertical</option>
+                    <option value="horizontal">Horizontal</option>
+                  </select>
+                </label>
+              )}
               <label className="table-config__control">
                 <span>Seats</span>
                 <input
