@@ -186,7 +186,7 @@ function App() {
       <WeddingContext.Provider value={{ state, dispatch }}>
         <div className="flex flex-col h-screen overflow-hidden">
           <header className="flex items-center justify-between px-6 py-4 bg-background border-b">
-            <h1 className="text-xl font-semibold">Wedding Seating Chart</h1>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>👰‍♀️🤵‍♂️ Wedding Seating Chart</h1>
             <div className="flex items-center gap-3">
               <Tooltip>
                 <TooltipTrigger asChild>

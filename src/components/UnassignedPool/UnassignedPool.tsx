@@ -20,7 +20,6 @@ export function UnassignedPool() {
       ref={setNodeRef}
       className={cn(
         'px-5 py-4 bg-background border-t min-h-[80px] transition-colors',
-        isOver && 'bg-accent'
       )}
     >
       <h3 className="text-sm font-semibold mb-3">

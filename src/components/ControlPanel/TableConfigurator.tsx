@@ -14,12 +14,12 @@ export function TableConfigurator() {
       <h3 className="text-sm font-semibold mb-3">Tables ({state.tables.length})</h3>
       <Button
         variant="outline"
-        className="w-full mb-3 border-dashed text-muted-foreground"
+        className="w-full mb-3 border-dashed text-muted-foreground cursor-pointer"
         onClick={() => dispatch({ type: 'ADD_TABLE' })}
       >
         + Add Table
       </Button>
-      <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
+      <div className="flex flex-col gap-2">
         {state.tables.map((table) => (
           <Card key={table.id} className="p-3">
             <div className="flex items-center gap-2 mb-2">
@@ -40,7 +40,7 @@ export function TableConfigurator() {
                 size="icon-xs"
                 onClick={() => dispatch({ type: 'REMOVE_TABLE', tableId: table.id })}
                 title="Remove table"
-                className="text-muted-foreground hover:text-destructive"
+                className="text-muted-foreground hover:text-destructive cursor-pointer"
               >
                 <X />
               </Button>
@@ -61,12 +61,12 @@ export function TableConfigurator() {
                 variant="outline"
                 size="sm"
               >
-                <ToggleGroupItem value="round" aria-label="Round" className="px-2">
+                <ToggleGroupItem value="round" aria-label="Round" className="px-2 cursor-pointer">
                   <svg width="16" height="16" viewBox="0 0 16 16">
                     <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                   </svg>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="rectangle" aria-label="Rectangle" className="px-2">
+                <ToggleGroupItem value="rectangle" aria-label="Rectangle" className="px-2 cursor-pointer">
                   <svg width="16" height="16" viewBox="0 0 16 16">
                     <rect x="2" y="3.5" width="12" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                   </svg>
@@ -88,12 +88,12 @@ export function TableConfigurator() {
                   variant="outline"
                   size="sm"
                 >
-                  <ToggleGroupItem value="vertical" aria-label="Vertical" className="px-2">
+                  <ToggleGroupItem value="vertical" aria-label="Vertical" className="px-2 cursor-pointer">
                     <svg width="16" height="16" viewBox="0 0 16 16">
                       <rect x="4.5" y="1.5" width="7" height="13" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                     </svg>
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="horizontal" aria-label="Horizontal" className="px-2">
+                  <ToggleGroupItem value="horizontal" aria-label="Horizontal" className="px-2 cursor-pointer">
                     <svg width="16" height="16" viewBox="0 0 16 16">
                       <rect x="1.5" y="4.5" width="13" height="7" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                     </svg>

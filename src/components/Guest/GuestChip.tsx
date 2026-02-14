@@ -22,9 +22,9 @@ export function GuestChip({ guest, fromSeatKey, isOverlay }: GuestChipProps) {
   return (
     <Badge
       ref={setNodeRef}
-      variant="default"
+      variant="outline"
       className={cn(
-        'cursor-grab select-none touch-none whitespace-nowrap',
+        'cursor-grab select-none touch-none whitespace-nowrap hover:bg-sidebar-accent transition-colors border-border text-foreground shadow-sm',
         isDragging && 'opacity-30',
         isOverlay && 'opacity-100 shadow-lg scale-105 cursor-grabbing'
       )}

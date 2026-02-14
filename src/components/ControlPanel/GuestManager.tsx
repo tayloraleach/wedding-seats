@@ -53,7 +53,7 @@ export function GuestManager() {
           placeholder="Guest name"
           className="flex-1"
         />
-        <Button onClick={handleAdd} size="sm">
+        <Button className="cursor-pointer" variant={'outline'} onClick={handleAdd} >
           Add
         </Button>
       </div>
@@ -68,13 +68,13 @@ export function GuestManager() {
         <Button
           variant="outline"
           size="sm"
-          className="w-full"
+          className="w-full cursor-pointer"
           onClick={() => fileInputRef.current?.click()}
         >
           Import Guests (JSON)
         </Button>
       </div>
-      <ul className="list-none p-0 m-0 max-h-[200px] overflow-y-auto">
+      <ul className="list-none p-0 m-0 max-h-[200px] no-scrollbar border rounded-md overflow-y-auto">
         {state.guests.map((guest) => (
           <li key={guest.id} className="flex items-center justify-between px-2 py-1.5 rounded text-sm hover:bg-secondary">
             <span>{guest.name}</span>

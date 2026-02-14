@@ -4,6 +4,7 @@ import { useWedding } from '../../state/WeddingContext';
 import { TableView } from '../Table/TableView';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import roses from './roses.svg';
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 1.5;
@@ -12,6 +13,16 @@ const BUTTON_ZOOM_STEP = 0.05;
 
 function clampZoom(z: number) {
   return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(z * 100) / 100));
+}
+
+function FloralCorner({ className }: { className?: string }) {
+  return (
+    <img
+      src={roses}
+      className={cn('absolute w-32 h-32 pointer-events-none opacity-15', className)}
+      alt=""
+    />
+  );
 }
 
 export function FloorPlan() {
@@ -130,6 +141,14 @@ export function FloorPlan() {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
+      <FloralCorner className="-top-4 -left-4 text-primary" />
+      <FloralCorner className="-top-4 -right-4 text-primary -scale-x-100" />
+      <FloralCorner className="-bottom-4 -left-4 rotate-180 text-primary -scale-y-100" />
+      <FloralCorner className="-bottom-4 -right-4 rotate-180 text-primary -scale-x-100 -scale-y-100" />
+
+      {/* Subtle border frame */}
+      {/* <div className="absolute inset-3 border border-dashed border-primary/15 rounded-lg pointer-events-none" /> */}
+
       {state.tables.length === 0 ? (
         <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
           <p>No tables yet. Add tables using the panel on the left.</p>
