@@ -55,7 +55,24 @@ import {
   ChevronUp,
   ChevronDown,
 } from 'lucide-react';
+import { Monitor } from 'lucide-react';
 import type { Guest, WeddingState } from './types';
+
+function MobileOverlay() {
+  return (
+    <div className="fixed inset-0 z-50 flex md:hidden items-center justify-center bg-background p-8">
+      <div className="flex flex-col items-center text-center gap-4 max-w-sm">
+        <Monitor className="size-12 text-muted-foreground" />
+        <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
+          Desktop Required
+        </h2>
+        <p className="text-muted-foreground">
+          Planning your wedding seating chart works best on a larger screen. Please switch to a desktop or laptop computer for the full experience.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [state, dispatch] = usePersistedState();
@@ -184,6 +201,7 @@ function App() {
   return (
     <TooltipProvider>
       <WeddingContext.Provider value={{ state, dispatch }}>
+        <MobileOverlay />
         <div className="flex flex-col h-screen overflow-hidden">
           <header className="flex items-center justify-between px-6 py-4 bg-background border-b">
             <h1 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>👰‍♀️🤵‍♂️ Wedding Seating Chart</h1>
