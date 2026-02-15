@@ -1,6 +1,7 @@
 import { useDraggable } from '@dnd-kit/core';
 import type { Guest } from '../../types';
-import './GuestChip.css';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface GuestChipProps {
   guest: Guest;
@@ -19,13 +20,18 @@ export function GuestChip({ guest, fromSeatKey, isOverlay }: GuestChipProps) {
   });
 
   return (
-    <div
+    <Badge
       ref={setNodeRef}
-      className={`guest-chip ${isDragging ? 'guest-chip--dragging' : ''} ${isOverlay ? 'guest-chip--overlay' : ''}`}
+      variant="outline"
+      className={cn(
+        'cursor-grab select-none touch-none whitespace-nowrap hover:bg-sidebar-accent transition-colors border-border text-foreground shadow-sm',
+        isDragging && 'opacity-30',
+        isOverlay && 'opacity-100 shadow-lg scale-105 cursor-grabbing'
+      )}
       {...listeners}
       {...attributes}
     >
       {guest.name}
-    </div>
+    </Badge>
   );
 }

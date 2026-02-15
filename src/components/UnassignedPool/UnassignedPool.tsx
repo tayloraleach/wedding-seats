@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core';
 import { useWedding } from '../../state/WeddingContext';
 import { GuestChip } from '../Guest/GuestChip';
-import './UnassignedPool.css';
+import { cn } from '@/lib/utils';
 
 export function UnassignedPool() {
   const { state } = useWedding();
@@ -18,19 +18,21 @@ export function UnassignedPool() {
   return (
     <div
       ref={setNodeRef}
-      className={`unassigned-pool ${isOver ? 'unassigned-pool--over' : ''}`}
+      className={cn(
+        'px-5 py-4 bg-background border-t min-h-[80px] transition-colors',
+      )}
     >
-      <h3 className="unassigned-pool__title">
+      <h3 className="text-sm font-semibold mb-3">
         Unassigned ({unassignedGuests.length})
       </h3>
       {unassignedGuests.length === 0 ? (
-        <p className="unassigned-pool__empty">
+        <p className="text-sm text-muted-foreground italic m-0">
           {state.guests.length === 0
             ? 'Add guests using the panel on the left'
             : 'All guests have been assigned!'}
         </p>
       ) : (
-        <div className="unassigned-pool__list">
+        <div className="flex flex-wrap gap-2">
           {unassignedGuests.map((guest) => (
             <GuestChip key={guest.id} guest={guest} />
           ))}
