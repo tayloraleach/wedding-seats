@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 export function UnassignedPool() {
   const { state } = useWedding();
-  const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id: 'unassigned-pool',
     data: { type: 'unassigned-pool' },
   });

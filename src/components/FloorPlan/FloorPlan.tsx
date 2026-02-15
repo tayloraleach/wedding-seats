@@ -4,7 +4,7 @@ import { useWedding } from '../../state/WeddingContext';
 import { TableView } from '../Table/TableView';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import roses from './roses.svg';
+import roses from './roses.png';
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 1.5;
@@ -35,7 +35,9 @@ export function FloorPlan() {
   const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
 
   const viewRef = useRef({ zoom: 1, panX: 0, panY: 0 });
-  viewRef.current = { zoom, panX: pan.x, panY: pan.y };
+  useEffect(() => {
+    viewRef.current = { zoom, panX: pan.x, panY: pan.y };
+  }, [zoom, pan.x, pan.y]);
 
   useEffect(() => {
     const el = containerRef.current;
